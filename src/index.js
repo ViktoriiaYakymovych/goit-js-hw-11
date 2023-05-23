@@ -1,3 +1,5 @@
 import './css/styles.css';
-
-const DEBOUNCE_DELAY = 300;
+import Notiflix from 'notiflix';
+import axios from 'axios';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
