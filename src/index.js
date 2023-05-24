@@ -17,7 +17,7 @@ const refs = {
 let page = 1;
 let searchQuery = '';
 let totalImages = 0;
-const gallery = new SimpleLightbox('.gallery');
+const gallery = new SimpleLightbox('.gallery a');
 
 async function fetchApi(value, page) {
     const { data } = await axios.get(
