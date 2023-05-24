@@ -19,7 +19,7 @@ let searchQuery = '';
 let totalImages = 0;
 const gallery = new SimpleLightbox('.gallery');
 
-async function fetchImages(value, page) {
+async function fetchApi(value, page) {
     const { data } = await axios.get(
     `${URL}?key=${API_KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=10`
     );
@@ -32,7 +32,7 @@ refs.searchFormEl.addEventListener('submit', onSubmit);
 async function onSubmit(e) {
     e.preventDefault();
     searchQuery = e.target.searchQuery.value.trim();
-    clearInput();
+    onclearInput();
     page = 1;
     totalImages = 0;
 
@@ -42,7 +42,7 @@ async function onSubmit(e) {
 
 
     try {
-        const resp = await fetchImages(searchQuery, page);
+        const resp = await fetchApi(searchQuery, page);
         console.log(resp.hits);
 
         if (resp.hits.length === 0) {
@@ -54,9 +54,9 @@ async function onSubmit(e) {
         if (resp.hits.length >= 10)
         removeHidden();
 
-        const markup = await markupCreate(resp.hits);
+        const markup = await createMarkup(resp.hits);
 
-        markupRender(markup);
+        renderMurkup(markup);
         Notiflix.Notify.success(`Hooray! We found ${resp.totalHits} images.`);
 
         totalImages += resp.hits.length;
@@ -74,14 +74,14 @@ refs.loadMoreBtn.addEventListener('click', onClick);
 async function onClick() {
 page += 1;
 try {
-    const resp = await fetchImages(searchQuery, page);
+    const resp = await fetchApi(searchQuery, page);
     totalImages += resp.hits.length;
     if (totalImages >= resp.totalHits) {
         addHidden();
 
         Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
     }
-        const markup = await markupCreate(resp.hits);
+        const markup = await createMarkup(resp.hits);
 
         markupRender(markup);
         
@@ -100,11 +100,11 @@ function removeHidden() {
     refs.loadMoreBtn.classList.remove('hidden');
 }
 
-function clearInput() {
+function onclearInput() {
     refs.searchFormEl.reset();
 };
 
-function markupCreate(data) {
+function createMarkup(data) {
     return data.reduce(
     (
         markup,
@@ -139,7 +139,7 @@ function markupCreate(data) {
     );
 }
 
-function markupRender(markup) { 
+function renderMurkup(markup) { 
     refs.galleryEl.insertAdjacentHTML("beforeend", markup);
 };
 
