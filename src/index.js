@@ -56,7 +56,7 @@ async function onSubmit(e) {
 
         const markup = await createMarkup(resp.hits);
 
-        renderMurkup(markup);
+        renderMarkup(markup);
         Notiflix.Notify.success(`Hooray! We found ${resp.totalHits} images.`);
 
         totalImages += resp.hits.length;
@@ -83,7 +83,7 @@ try {
     }
         const markup = await createMarkup(resp.hits);
 
-        markupRender(markup);
+        renderMarkup(markup);
         
         scrollBy();
         gallery.refresh();
@@ -139,7 +139,7 @@ function createMarkup(data) {
     );
 }
 
-function renderMurkup(markup) { 
+function renderMarkup(markup) { 
     refs.galleryEl.insertAdjacentHTML("beforeend", markup);
 };
 
