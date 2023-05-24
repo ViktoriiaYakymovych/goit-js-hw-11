@@ -113,7 +113,7 @@ function createMarkup(data) {
         return (
         markup +
         `<div class="photo-card">
-        <a href="${largeImageURL}"><img src="${webformatURL}" alt="${tags}" loading="lazy" /></a>
+        <a href="${largeImageURL}" target="_blank"><img src="${webformatURL}" alt="${tags}" width='300' height='200' loading="lazy" /></a>
         <div class="info">
         <p class="info-item">
             <b>Likes: </b>
