@@ -45,8 +45,9 @@ button {
   cursor: pointer;
   display: inline-block;
 
-  padding: 16px 32px;
-  min-width: 170px;
+  padding: 10px;
+  min-width: 150px;
+  height: 40px;
 
   font-family: inherit;
   font-weight: 600;
