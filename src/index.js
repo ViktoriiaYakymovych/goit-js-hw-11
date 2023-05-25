@@ -1,31 +1,22 @@
 import './css/styles.css';
 import Notiflix from 'notiflix';
-import axios from 'axios';
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
+import { refs } from './js/refs.js';
+import { fetchApi } from './js/fetchApi.js';
+import { createMarkup } from './js/createMarkup.js';
+import { renderMarkup } from './js/renderMarkup.js';
+import { removeHidden } from './js/removeHidden.js';
+import { addHidden } from './js/addHidden.js';
+import { onclearInput } from './js/clearInput.js';
+import { scrollBy } from './js/scrollBy.js';
 
-
-const URL = 'https://pixabay.com/api/';
-const API_KEY = '36706686-66124fda296938ef4c6de376b';
-
-const refs = {
-    searchFormEl: document.getElementById('search-form'),
-    galleryEl: document.querySelector('.gallery'),
-    loadMoreBtn: document.querySelector('.load-more'),
-};
 
 let page = 1;
 let searchQuery = '';
 let totalImages = 0;
 const gallery = new SimpleLightbox('.gallery a');
 
-async function fetchApi(value, page) {
-    const { data } = await axios.get(
-    `${URL}?key=${API_KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=10`
-    );
-
-    return data;
-}
 
 refs.searchFormEl.addEventListener('submit', onSubmit);
 
@@ -38,8 +29,9 @@ async function onSubmit(e) {
 
     refs.galleryEl.innerHTML = '';
 
-    if (searchQuery === '') return Notiflix.Notify.info('Please write something');
-
+    if (searchQuery === '') {
+        addHidden();
+        return Notiflix.Notify.info('Please write something')};
 
     try {
         const resp = await fetchApi(searchQuery, page);
@@ -51,7 +43,7 @@ async function onSubmit(e) {
         );
         }
 
-        if (resp.hits.length >= 10)
+        if (resp.hits.length >= 40)
         removeHidden();
 
         const markup = await createMarkup(resp.hits);
@@ -90,68 +82,6 @@ try {
     } catch (error) {
         console.log(error);
     }
-}
-
-function addHidden() {
-    refs.loadMoreBtn.classList.add('hidden');
 };
-
-function removeHidden() {
-    refs.loadMoreBtn.classList.remove('hidden');
-}
-
-function onclearInput() {
-    refs.searchFormEl.reset();
-};
-
-function createMarkup(data) {
-    return data.reduce(
-    (
-        markup,
-        { webformatURL, largeImageURL, tags, likes, views, comments, downloads, }
-    ) => {
-        return (
-        markup +
-        `<div class="photo-card">
-        <a href="${largeImageURL}" target="_blank"><img src="${webformatURL}" alt="${tags}" width='300' height='200' loading="lazy" /></a>
-        <div class="info">
-        <p class="info-item">
-            <b>Likes: </b>
-            <span>${likes}</span>
-        </p>
-        <p class="info-item">
-            <b>Views: </b>
-            <span>${views}</span>
-        </p>
-        <p class="info-item">
-            <b>Comments: </b>
-            <span>${comments}</span>
-        </p>
-        <p class="info-item">
-            <b>Downloads: </b>
-            <span>${downloads}</span>
-        </p>
-        </div>
-        </div>`
-            );
-    },
-    ''
-    );
-}
-
-function renderMarkup(markup) { 
-    refs.galleryEl.insertAdjacentHTML("beforeend", markup);
-};
-
-function scrollBy() { 
-    const { height: cardHeight } = document
-    .querySelector('.gallery')
-    .firstElementChild.getBoundingClientRect();
-
-    window.scrollBy({
-    top: cardHeight * 2,
-    behavior: 'smooth',
-    });
-}
 
 
